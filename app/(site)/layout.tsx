@@ -1,4 +1,4 @@
-"use client"
+
 
 import { CountryProvider } from "@/hooks/useCountry"
 import Navbar from "@/components/Navbar"
@@ -44,4 +44,5 @@ export default function SiteLayout({
       </div>
     </CountryProvider>
   )
+
 }
