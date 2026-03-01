@@ -1,0 +1,70 @@
+"use client"
+
+import Link from "next/link"
+import { useCountry } from "@/hooks/useCountry"
+
+export default function Navbar() {
+  const { country, setCountry } = useCountry()
+
+  const links = [
+    { name: "Shoes", href: "/shoes" },
+    { name: "Watches", href: "/watches" },
+    { name: "Clothes", href: "/clothes" },
+    { name: "Perfume", href: "/perfume" },
+    { name: "Electronics", href: "/accessories/electronics" },
+    { name: "Furniture", href: "/accessories/furniture" },
+    { name: "Accessories", href: "/accessories/accessories" },
+  ]
+
+  const countries = [
+    "India",
+    "USA",
+    "Germany",
+    "UK",
+    "Japan",
+    "Canada",
+    "Australia",
+  ]
+
+  return (
+    <div className="fixed top-0 w-full bg-black/60 backdrop-blur-lg z-50">
+      <div className="flex justify-between items-center px-10 py-4 text-white">
+
+        {/* LOGO */}
+        <Link
+          href="/"
+          className="text-3xl font-bold text-yellow-500 tracking-widest"
+        >
+          LUX
+        </Link>
+
+        {/* LINKS + COUNTRY */}
+        <div className="flex gap-8 items-center">
+
+          {links.map((link) => (
+            <Link
+              key={link.name}
+              href={link.href}
+              className="hover:text-yellow-400 transition"
+            >
+              {link.name}
+            </Link>
+          ))}
+
+          <select
+            value={country}
+            onChange={(e) => setCountry(e.target.value)}
+            className="bg-black border border-yellow-500 px-3 py-1 rounded"
+          >
+            {countries.map((c) => (
+              <option key={c} value={c}>
+                {c}
+              </option>
+            ))}
+          </select>
+
+        </div>
+      </div>
+    </div>
+  )
+}
