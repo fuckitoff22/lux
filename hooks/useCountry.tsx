@@ -24,6 +24,7 @@ const countryMap: Record<string, { currency: string; rate: number }> = {
 export function CountryProvider({ children }: { children: React.ReactNode }) {
   const [country, setCountryState] = useState("India")
 
+  // 🔥 Load saved country only once
   useEffect(() => {
     const saved = localStorage.getItem("lux_country")
     if (saved && countryMap[saved]) {
@@ -33,19 +34,23 @@ export function CountryProvider({ children }: { children: React.ReactNode }) {
 
   const setCountry = (c: string) => {
     if (!countryMap[c]) return
+
     setCountryState(c)
     localStorage.setItem("lux_country", c)
   }
 
-  const value = {
-    country,
-    currency: countryMap[country].currency,
-    rate: countryMap[country].rate,
-    setCountry,
-  }
+  const currency = countryMap[country]?.currency ?? "INR"
+  const rate = countryMap[country]?.rate ?? 1
 
   return (
-    <CountryContext.Provider value={value}>
+    <CountryContext.Provider
+      value={{
+        country,
+        currency,
+        rate,
+        setCountry,
+      }}
+    >
       {children}
     </CountryContext.Provider>
   )
