@@ -1,9 +1,8 @@
-
+"use client"
 
 import { CountryProvider } from "@/hooks/useCountry"
 import Navbar from "@/components/Navbar"
 import { usePathname } from "next/navigation"
-import { useEffect } from "react"
 
 export default function SiteLayout({
   children,
@@ -12,37 +11,33 @@ export default function SiteLayout({
 }) {
   const pathname = usePathname()
 
-  // 🔹 keeps your scroll/animation logic intact
-  useEffect(() => {
-    // if you already had scroll logic here, keep it
-  }, [pathname])
-
   return (
     <CountryProvider>
-      {/* BACKGROUND VIDEO */}
-      <div className="fixed inset-0 -z-10 overflow-hidden">
+      <div className="relative min-h-screen text-white overflow-x-hidden">
+
+        {/* Background Video */}
         <video
           autoPlay
-          muted
           loop
+          muted
           playsInline
-          className="w-full h-full object-cover opacity-70"
+          className="fixed top-0 left-0 w-full h-full object-cover -z-10"
         >
           <source src="/lux-bg.mp4" type="video/mp4" />
         </video>
 
-        {/* Frost overlay */}
-        <div className="absolute inset-0 bg-black/40 backdrop-blur-sm"></div>
-      </div>
+        {/* Dark Overlay */}
+        <div className="fixed inset-0 bg-black/60 -z-10"></div>
 
-      {/* NAVBAR */}
-      <Navbar />
+        {/* Navbar */}
+        <Navbar />
 
-      {/* PAGE CONTENT */}
-      <div className="pt-24 min-h-screen text-white">
-        {children}
+        {/* Page Content */}
+        <main className="pt-24 px-10">
+          {children}
+        </main>
+
       </div>
     </CountryProvider>
   )
-
 }
