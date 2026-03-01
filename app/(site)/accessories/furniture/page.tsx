@@ -4,9 +4,9 @@ export default function furniturePage() {
   return (
     <div className="px-20 py-16">
       <ProductGrid
-        category="accessories"
-        subcategory="furniture"
+        category="furniture"
       />
     </div>
   )
+
 }
