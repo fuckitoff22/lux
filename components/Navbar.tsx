@@ -1,12 +1,12 @@
-export const dynamic = "force-dynamic"
 "use client"
+
 import Link from "next/link"
-import { useRouter } from "next/navigation"
 import { useCountry } from "@/hooks/useCountry"
+import { useRouter } from "next/navigation"
 
 export default function Navbar() {
-  const router = useRouter()
   const { country, setCountry } = useCountry()
+  const router = useRouter()
 
   const links = [
     { name: "Shoes", href: "/shoes" },
@@ -28,18 +28,17 @@ export default function Navbar() {
     "Australia",
   ]
 
-  const handleCountryChange = (value: string) => {
+  const handleChange = (value: string) => {
     setCountry(value)
 
-    // 🔥 Force refresh but stay on same page
-    setTimeout(() => {
-      router.refresh()
-    }, 50)
+    // Force re-render without full reload
+    router.refresh()
   }
 
   return (
     <div className="fixed top-0 w-full bg-black/60 backdrop-blur-lg z-50">
       <div className="flex justify-between items-center px-10 py-4 text-white">
+
         <Link
           href="/"
           className="text-3xl font-bold text-yellow-500 tracking-widest"
@@ -48,6 +47,7 @@ export default function Navbar() {
         </Link>
 
         <div className="flex gap-8 items-center">
+
           {links.map((link) => (
             <Link
               key={link.name}
@@ -60,7 +60,7 @@ export default function Navbar() {
 
           <select
             value={country}
-            onChange={(e) => handleCountryChange(e.target.value)}
+            onChange={(e) => handleChange(e.target.value)}
             className="bg-black border border-yellow-500 px-3 py-1 rounded"
           >
             {countries.map((c) => (
@@ -69,10 +69,9 @@ export default function Navbar() {
               </option>
             ))}
           </select>
+
         </div>
       </div>
     </div>
   )
 }
-
-
