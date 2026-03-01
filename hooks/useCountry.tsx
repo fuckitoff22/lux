@@ -1,6 +1,6 @@
 "use client"
 
-import { createContext, useContext, useState, useEffect } from "react"
+import { createContext, useContext, useState } from "react"
 
 type CountryContextType = {
   country: string
@@ -22,35 +22,31 @@ const countryMap: Record<string, { currency: string; rate: number }> = {
 }
 
 export function CountryProvider({ children }: { children: React.ReactNode }) {
-  const [country, setCountryState] = useState("India")
 
-  // 🔥 Load saved country only once
-  useEffect(() => {
+  // 🔥 Initialize directly from localStorage safely
+  const getInitialCountry = () => {
+    if (typeof window === "undefined") return "India"
     const saved = localStorage.getItem("lux_country")
-    if (saved && countryMap[saved]) {
-      setCountryState(saved)
-    }
-  }, [])
+    return saved && countryMap[saved] ? saved : "India"
+  }
+
+  const [country, setCountryState] = useState(getInitialCountry)
 
   const setCountry = (c: string) => {
     if (!countryMap[c]) return
-
     setCountryState(c)
     localStorage.setItem("lux_country", c)
   }
 
-  const currency = countryMap[country]?.currency ?? "INR"
-  const rate = countryMap[country]?.rate ?? 1
+  const value = {
+    country,
+    currency: countryMap[country].currency,
+    rate: countryMap[country].rate,
+    setCountry,
+  }
 
   return (
-    <CountryContext.Provider
-      value={{
-        country,
-        currency,
-        rate,
-        setCountry,
-      }}
-    >
+    <CountryContext.Provider value={value}>
       {children}
     </CountryContext.Provider>
   )
