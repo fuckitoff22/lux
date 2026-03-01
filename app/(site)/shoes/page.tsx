@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import ProductGrid from "@/components/ProductGrid"
 
 export default function ShoesPage() {
@@ -8,4 +9,5 @@ export default function ShoesPage() {
       <ProductGrid category="shoes" />
     </div>
   )
+
 }
