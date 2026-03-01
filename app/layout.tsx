@@ -1,5 +1,7 @@
-export const dynamic= "force-dynamic"
+"use client"
+
 import "./globals.css"
+import { CountryProvider } from "@/hooks/useCountry"
 
 export default function RootLayout({
   children,
@@ -8,7 +10,11 @@ export default function RootLayout({
 }) {
   return (
     <html lang="en">
-      <body>{children}</body>
+      <body>
+        <CountryProvider>
+          {children}
+        </CountryProvider>
+      </body>
     </html>
   )
 }
