@@ -20,82 +20,62 @@ interface Product {
   category: string
 }
 
-const currencyMap: any = {
-  India: "INR",
-  Germany: "EUR",
-  USA: "USD",
-  UK: "GBP",
-  Japan: "JPY",
-  Canada:"CAD",
-  Australia:"AUD",
-}
-
-const rates: any = {
-  INR: 1,
-  EUR: 0.011,
-  USD: 0.012,
-  GBP: 0.0095,
-  JPY: 1.8,
-   CAD: 0.0150 ,
-   AUD: 0.016, 
-}
-
 export default function ProductPage() {
   const { id } = useParams()
-  const { country } = useCountry()
+  const { currency, rate } = useCountry()
 
   const [product, setProduct] = useState<Product | null>(null)
   const [suggestions, setSuggestions] = useState<Product[]>([])
   const [activeImg, setActiveImg] = useState(0)
 
   useEffect(() => {
-    fetchProduct()
+    if (!id) return
+
+    const loadProduct = async () => {
+      const { data } = await supabase
+        .from("products")
+        .select("*")
+        .eq("id", id)
+        .single()
+
+      if (data) {
+        setProduct(data)
+
+        // increase traffic
+        await supabase.rpc("increment_traffic", {
+          product_id: id,
+        })
+      }
+    }
+
+    loadProduct()
   }, [id])
 
   useEffect(() => {
-    if (product) fetchSuggestions()
+    if (!product) return
+
+    const fetchSuggestions = async () => {
+      const { data } = await supabase
+        .from("products")
+        .select("*")
+        .eq("category", product.category)
+        .neq("id", product.id)
+        .limit(4)
+
+      if (data) setSuggestions(data)
+    }
+
+    fetchSuggestions()
   }, [product])
 
-  const fetchProduct = async () => {
-    const { data } = await supabase
-      .from("products")
-      .select("*")
-      .eq("id", id)
-      .single()
-
-    if (data) setProduct(data)
-  }
-
-  const fetchSuggestions = async () => {
-    const { data } = await supabase
-      .from("products")
-      .select("*")
-      .eq("category", product?.category)
-      .neq("id", product?.id)
-      .limit(4)
-
-    if (data) setSuggestions(data)
-  }
-useEffect(() => {
-  if (!id) return
-
-  fetchProduct()
-
-  const increaseTraffic = async () => {
-    await supabase.rpc("increment_traffic", { product_id: id })
-  }
-
-  increaseTraffic()
-}, [id])
   const getImageUrl = (fileName: string) => {
     return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${fileName}`
   }
 
   const formatPrice = (price: number) => {
-    const currency = currencyMap[country] || "INR"
-    const converted = price * (rates[currency] || 1)
+    const converted = price * rate
 
-    return new Intl.NumberFormat("en", {
+    return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency,
     }).format(converted)
@@ -135,7 +115,6 @@ useEffect(() => {
               className="object-cover transition duration-700 ease-in-out group-hover:scale-105"
             />
 
-            {/* Arrows */}
             <button
               onClick={prevImage}
               className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition"
@@ -151,7 +130,6 @@ useEffect(() => {
             </button>
           </div>
 
-          {/* Thumbnails */}
           <div className="flex gap-4 mt-4">
             {product.images?.map((img, index) => (
               <div
@@ -200,15 +178,18 @@ useEffect(() => {
             {product.description}
           </p>
 
-         <button
-  onClick={async () => {
-    await supabase.rpc("increment_clicks", { product_id: product.id })
-    window.open(product.affiliate_link, "_blank")
-  }}
-  className="inline-block mt-8 bg-yellow-500 text-black px-8 py-3 rounded-xl font-semibold hover:scale-105 transition"
->
-  Buy Now
-</button>        </div>
+          <button
+            onClick={async () => {
+              await supabase.rpc("increment_clicks", {
+                product_id: product.id,
+              })
+              window.open(product.affiliate_link, "_blank")
+            }}
+            className="inline-block mt-8 bg-yellow-500 text-black px-8 py-3 rounded-xl font-semibold hover:scale-105 transition"
+          >
+            Buy Now
+          </button>
+        </div>
       </div>
 
       {/* SUGGESTION BLOCK */}
@@ -233,7 +214,9 @@ useEffect(() => {
                 />
               </div>
 
-              <p className="mt-3 font-semibold">{item.name}</p>
+              <p className="mt-3 font-semibold">
+                {item.name}
+              </p>
 
               <span className="text-yellow-500 font-bold">
                 {formatPrice(item.final_price)}
