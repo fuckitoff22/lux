@@ -1,5 +1,5 @@
-export const dynamic = "force-dynamic"
 "use client"
+
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
@@ -28,29 +28,31 @@ export default function ProductPage() {
   const [suggestions, setSuggestions] = useState<Product[]>([])
   const [activeImg, setActiveImg] = useState(0)
 
+  // Fetch product
   useEffect(() => {
     if (!id) return
 
-    const loadProduct = async () => {
+    const fetchProduct = async () => {
       const { data } = await supabase
         .from("products")
         .select("*")
         .eq("id", id)
         .single()
 
-      if (data) {
-        setProduct(data)
-
-        // increase traffic
-        await supabase.rpc("increment_traffic", {
-          product_id: id,
-        })
-      }
+      if (data) setProduct(data)
     }
 
-    loadProduct()
+    fetchProduct()
+
+    // Increase traffic
+    const increaseTraffic = async () => {
+      await supabase.rpc("increment_traffic", { product_id: id })
+    }
+
+    increaseTraffic()
   }, [id])
 
+  // Fetch suggestions
   useEffect(() => {
     if (!product) return
 
@@ -72,6 +74,7 @@ export default function ProductPage() {
     return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${fileName}`
   }
 
+  // 🔥 Correct currency formatting (instant update)
   const formatPrice = (price: number) => {
     const converted = price * rate
 
@@ -109,12 +112,13 @@ export default function ProductPage() {
         >
           <div className="relative h-[500px] w-full rounded-2xl overflow-hidden">
             <Image
-              src={getImageUrl(product.images?.[activeImg] || "")}
+              src={getImageUrl(product.images?.[activeImg] || product.images?.[0])}
               alt={product.name}
               fill
               className="object-cover transition duration-700 ease-in-out group-hover:scale-105"
             />
 
+            {/* Arrows */}
             <button
               onClick={prevImage}
               className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition"
@@ -130,6 +134,7 @@ export default function ProductPage() {
             </button>
           </div>
 
+          {/* Thumbnails */}
           <div className="flex gap-4 mt-4">
             {product.images?.map((img, index) => (
               <div
@@ -180,9 +185,7 @@ export default function ProductPage() {
 
           <button
             onClick={async () => {
-              await supabase.rpc("increment_clicks", {
-                product_id: product.id,
-              })
+              await supabase.rpc("increment_clicks", { product_id: product.id })
               window.open(product.affiliate_link, "_blank")
             }}
             className="inline-block mt-8 bg-yellow-500 text-black px-8 py-3 rounded-xl font-semibold hover:scale-105 transition"
@@ -192,7 +195,7 @@ export default function ProductPage() {
         </div>
       </div>
 
-      {/* SUGGESTION BLOCK */}
+      {/* SUGGESTIONS */}
       <div className="mt-24">
         <h2 className="text-2xl font-bold mb-8">
           You may also like
@@ -207,16 +210,14 @@ export default function ProductPage() {
             >
               <div className="relative h-48 w-full rounded-lg overflow-hidden">
                 <Image
-                  src={getImageUrl(item.images?.[0] || "")}
+                  src={getImageUrl(item.images?.[0])}
                   alt={item.name}
                   fill
                   className="object-cover"
                 />
               </div>
 
-              <p className="mt-3 font-semibold">
-                {item.name}
-              </p>
+              <p className="mt-3 font-semibold">{item.name}</p>
 
               <span className="text-yellow-500 font-bold">
                 {formatPrice(item.final_price)}
@@ -229,5 +230,3 @@ export default function ProductPage() {
     </div>
   )
 }
-
-
