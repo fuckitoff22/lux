@@ -1,5 +1,5 @@
 "use client"
-
+export const dynamic = "force-dynamic"
 import Image from "next/image"
 import Link from "next/link"
 import { useEffect, useState } from "react"
@@ -92,3 +92,4 @@ export default function ProductGrid({ category }: { category: string }) {
     </div>
   )
 }
+
