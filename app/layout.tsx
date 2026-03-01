@@ -1,7 +1,6 @@
 import "./globals.css"
-import Navbar from "@/components/Navbar"
-import BackgroundVideo from "@/components/BackgroundVideo"
 import { CountryProvider } from "@/hooks/useCountry"
+import Navbar from "@/components/Navbar"
 
 export const metadata = {
   title: "LUX",
@@ -16,11 +15,30 @@ export default function RootLayout({
   return (
     <html lang="en">
       <body className="bg-black text-white">
+
+        {/* 🔥 Background Video */}
+        <div className="fixed inset-0 -z-10 overflow-hidden">
+          <video
+            autoPlay
+            muted
+            loop
+            playsInline
+            className="w-full h-full object-cover opacity-80"
+          >
+            <source src="/lux-bg.mp4" type="video/mp4" />
+          </video>
+
+          {/* Frost Overlay */}
+          <div className="absolute inset-0 bg-black/50 backdrop-blur-sm"></div>
+        </div>
+
         <CountryProvider>
-          <BackgroundVideo />
           <Navbar />
-          <main className="relative z-10">{children}</main>
+          <main className="pt-24 relative z-10">
+            {children}
+          </main>
         </CountryProvider>
+
       </body>
     </html>
   )
