@@ -71,7 +71,7 @@ export default function ProductPage() {
   }, [product])
 
   const getImageUrl = (fileName: string) => {
-        return `https://ftxeeljgsumvalicmrq.supabase.co/storage/v1/object/public/products/${encodeURIComponent(fileName)}`
+        return `https:/https://fftxeeljgsumvalcimrq.supabase.co/storage/v1/object/public/products/${encodeURIComponent(fileName)}`
   }
 
   // 🔥 Correct currency formatting (instant update)
@@ -230,4 +230,5 @@ export default function ProductPage() {
     </div>
   )
 }
+
 
