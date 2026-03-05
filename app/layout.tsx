@@ -9,28 +9,35 @@ export default function SiteLayout({
   children: React.ReactNode
 }) {
   return (
-    <CountryProvider>
-      <div className="relative min-h-screen text-white overflow-x-hidden">
+    <>
+      {/* Mobile viewport fix */}
+      <head>
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
+      </head>
 
-        <video
-          autoPlay
-          loop
-          muted
-          playsInline
-          className="fixed top-0 left-0 w-full h-full object-cover -z-10"
-        >
-          <source src="/lux-bg.mp4" type="video/mp4" />
-        </video>
+      <CountryProvider>
+        <div className="relative min-h-screen text-white overflow-x-hidden">
 
-        <div className="fixed inset-0 bg-black/60 -z-10"></div>
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="fixed top-0 left-0 w-full h-full object-cover -z-10"
+          >
+            <source src="/lux-bg.mp4" type="video/mp4" />
+          </video>
 
-        <Navbar />
+          <div className="fixed inset-0 bg-black/60 -z-10"></div>
 
-        <main className="pt-24 px-10">
-          {children}
-        </main>
+          <Navbar />
 
-      </div>
-    </CountryProvider>
+          <main className="pt-24 px-10">
+            {children}
+          </main>
+
+        </div>
+      </CountryProvider>
+    </>
   )
 }
