@@ -23,14 +23,13 @@ const countryMap: Record<string, { currency: string; rate: number }> = {
 
 export function CountryProvider({ children }: { children: React.ReactNode }) {
 
-  // 🔥 Initialize directly from localStorage safely
   const getInitialCountry = () => {
     if (typeof window === "undefined") return "India"
     const saved = localStorage.getItem("lux_country")
     return saved && countryMap[saved] ? saved : "India"
   }
 
-  const [country, setCountryState] = useState(getInitialCountry)
+  const [country, setCountryState] = useState(getInitialCountry())
 
   const setCountry = (c: string) => {
     if (!countryMap[c]) return
