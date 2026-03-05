@@ -1,8 +1,12 @@
-export const dynamic = "force-dynamic"
+"use client"
 
-import ProductGrid from "@/components/ProductGrid"
+import dynamic from "next/dynamic"
 
-export default function Page() {
+const ProductGrid = dynamic(() => import("@/components/ProductGrid"), {
+  ssr: false,
+})
+
+export default function FurniturePage() {
   return (
     <div className="pt-24">
       <ProductGrid category="furniture" />
