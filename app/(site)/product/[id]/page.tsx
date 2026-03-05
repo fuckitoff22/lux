@@ -1,5 +1,4 @@
 "use client"
-
 import { useEffect, useState } from "react"
 import { useParams } from "next/navigation"
 import Image from "next/image"
@@ -230,6 +229,7 @@ export default function ProductPage() {
     </div>
   )
 }
+
 
 
 
