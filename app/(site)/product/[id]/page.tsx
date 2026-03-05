@@ -70,7 +70,7 @@ export default function ProductPage() {
   }, [product])
 
   const getImageUrl = (fileName: string) => {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${fileName}`
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${encodeURIComponent(fileName)}`
 }
 
   // 🔥 Correct currency formatting (instant update)
@@ -229,6 +229,7 @@ export default function ProductPage() {
     </div>
   )
 }
+
 
 
 
