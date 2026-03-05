@@ -1,10 +1,6 @@
-export const dynamic = "force-dynamic"
+"use client"
 
-import dynamicImport from "next/dynamic"
-
-const ProductGrid = dynamicImport(() => import("@/components/ProductGrid"), {
-  ssr: false,
-})
+import ProductGrid from "@/components/ProductGrid"
 
 export default function Page() {
   return (
