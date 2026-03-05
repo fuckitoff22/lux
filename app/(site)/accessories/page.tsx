@@ -1,4 +1,3 @@
-export const dynamic = "force-dynamic"
 "use client"
 import Link from "next/link"
 import { motion } from "framer-motion"
@@ -81,4 +80,5 @@ export default function AccessoriesPage() {
   )
 
 }
+
 
