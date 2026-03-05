@@ -68,9 +68,9 @@ export default function ProductPage() {
 
     fetchSuggestions()
   }, [product])
-
-  const getImageUrl = (fileName: string) => {
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${encodeURIComponent(fileName)}`
+const getImageUrl = (path: string) => {
+  if (path.startsWith("http")) return path
+  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${encodeURIComponent(path)}`
 }
 
   // 🔥 Correct currency formatting (instant update)
@@ -229,6 +229,7 @@ export default function ProductPage() {
     </div>
   )
 }
+
 
 
 
