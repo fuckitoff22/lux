@@ -2,13 +2,9 @@
 
 import ProductGrid from "@/components/ProductGrid"
 
-export default function AccessoriesPage() {
+export default function Page() {
   return (
-    <div className="pt-24 px-6 md:px-10">
-      <h1 className="text-3xl md:text-4xl font-bold mb-8 text-yellow-500">
-        Accessories
-      </h1>
-
+    <div>
       <ProductGrid category="accessories" />
     </div>
   )
