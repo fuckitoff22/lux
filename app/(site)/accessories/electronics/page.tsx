@@ -1,8 +1,8 @@
-"use client"
+export const dynamic = "force-dynamic"
 
 import ProductGrid from "@/components/ProductGrid"
 
-export default function ElectronicsPage() {
+export default function Page() {
   return (
     <div className="pt-24">
       <ProductGrid category="electronics" />
