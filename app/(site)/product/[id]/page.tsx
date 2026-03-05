@@ -43,7 +43,6 @@ export default function ProductPage() {
 
     fetchProduct()
 
-    // Increase traffic
     const increaseTraffic = async () => {
       await supabase.rpc("increment_traffic", { product_id: id })
     }
@@ -68,12 +67,7 @@ export default function ProductPage() {
 
     fetchSuggestions()
   }, [product])
-const getImageUrl = (path: string) => {
-  if (path.startsWith("http")) return path
-  return `${process.env.NEXT_PUBLIC_SUPABASE_URL}/storage/v1/object/public/products/${encodeURIComponent(path)}`
-}
 
-  // 🔥 Correct currency formatting (instant update)
   const formatPrice = (price: number) => {
     const converted = price * rate
 
@@ -85,19 +79,21 @@ const getImageUrl = (path: string) => {
 
   const nextImage = () => {
     if (!product?.images) return
-    setActiveImg((prev) =>
+    setActiveImg(prev =>
       prev === product.images.length - 1 ? 0 : prev + 1
     )
   }
 
   const prevImage = () => {
     if (!product?.images) return
-    setActiveImg((prev) =>
+    setActiveImg(prev =>
       prev === 0 ? product.images.length - 1 : prev - 1
     )
   }
 
-  if (!product) return null
+  if (!product || !product.images?.length) return null
+
+  const mainImage = product.images[activeImg] || product.images[0]
 
   return (
     <div className="px-10 py-20 text-white">
@@ -105,19 +101,17 @@ const getImageUrl = (path: string) => {
       <div className="grid md:grid-cols-2 gap-16">
 
         {/* IMAGE SECTION */}
-        <div
-          className="relative group"
-          onMouseEnter={nextImage}
-        >
+        <div className="relative group">
+
           <div className="relative h-[500px] w-full rounded-2xl overflow-hidden">
+
             <Image
-              src={getImageUrl(product.images?.[activeImg] || product.images?.[0])}
+              src={mainImage}
               alt={product.name}
               fill
               className="object-cover transition duration-700 ease-in-out group-hover:scale-105"
             />
 
-            {/* Arrows */}
             <button
               onClick={prevImage}
               className="absolute left-3 top-1/2 -translate-y-1/2 bg-black/50 px-3 py-2 rounded-full opacity-0 group-hover:opacity-100 transition"
@@ -131,11 +125,12 @@ const getImageUrl = (path: string) => {
             >
               ▶
             </button>
+
           </div>
 
           {/* Thumbnails */}
           <div className="flex gap-4 mt-4">
-            {product.images?.map((img, index) => (
+            {product.images.map((img, index) => (
               <div
                 key={index}
                 onClick={() => setActiveImg(index)}
@@ -146,7 +141,7 @@ const getImageUrl = (path: string) => {
                 }`}
               >
                 <Image
-                  src={getImageUrl(img)}
+                  src={img}
                   alt=""
                   fill
                   className="object-cover"
@@ -154,10 +149,12 @@ const getImageUrl = (path: string) => {
               </div>
             ))}
           </div>
+
         </div>
 
         {/* DETAILS */}
         <div>
+
           <h1 className="text-4xl font-bold">{product.name}</h1>
           <p className="text-gray-400 mt-2">{product.brand}</p>
 
@@ -171,6 +168,7 @@ const getImageUrl = (path: string) => {
                 <span className="line-through text-gray-500">
                   {formatPrice(product.price)}
                 </span>
+
                 <span className="text-green-400 font-semibold">
                   {product.discount}% OFF
                 </span>
@@ -191,25 +189,29 @@ const getImageUrl = (path: string) => {
           >
             Buy Now
           </button>
+
         </div>
       </div>
 
       {/* SUGGESTIONS */}
       <div className="mt-24">
+
         <h2 className="text-2xl font-bold mb-8">
           You may also like
         </h2>
 
         <div className="grid md:grid-cols-4 gap-6">
+
           {suggestions.map((item) => (
             <Link
               key={item.id}
               href={`/product/${item.id}`}
               className="bg-white/5 p-4 rounded-xl hover:scale-105 transition"
             >
+
               <div className="relative h-48 w-full rounded-lg overflow-hidden">
                 <Image
-                  src={getImageUrl(item.images?.[0])}
+                  src={item.images?.[0]}
                   alt={item.name}
                   fill
                   className="object-cover"
@@ -221,18 +223,14 @@ const getImageUrl = (path: string) => {
               <span className="text-yellow-500 font-bold">
                 {formatPrice(item.final_price)}
               </span>
+
             </Link>
           ))}
+
         </div>
+
       </div>
 
     </div>
   )
 }
-
-
-
-
-
-
-
