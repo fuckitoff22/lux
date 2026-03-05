@@ -1,3 +1,4 @@
+export const dynamic = "force-dynamic"
 import Navbar from "@/components/Navbar"
 import { CountryProvider } from "@/hooks/useCountry"
 
@@ -32,3 +33,4 @@ export default function SiteLayout({
     </CountryProvider>
   )
 }
+
