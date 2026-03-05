@@ -1,5 +1,5 @@
 "use client"
-
+import "./globals.css"
 import Navbar from "@/components/Navbar"
 import { CountryProvider } from "@/hooks/useCountry"
 
