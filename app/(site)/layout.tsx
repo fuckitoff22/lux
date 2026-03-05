@@ -1,5 +1,5 @@
 "use client"
-
+export const dynamic = "force-dynamic"
 import Navbar from "@/components/Navbar"
 
 export default function SiteLayout({
@@ -31,6 +31,7 @@ export default function SiteLayout({
     </div>
   )
 }
+
 
 
 
