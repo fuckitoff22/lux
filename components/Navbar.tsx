@@ -77,11 +77,11 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* COUNTRY SELECTOR (always visible) */}
+        {/* COUNTRY SELECTOR (DESKTOP ONLY) */}
         <select
           value={country}
           onChange={(e) => handleChange(e.target.value)}
-          className="bg-black border border-yellow-500 px-3 py-1 rounded text-sm"
+          className="hidden md:block bg-black border border-yellow-500 px-3 py-1 rounded text-sm"
         >
           {countries.map((c) => (
             <option key={c} value={c}>
@@ -125,6 +125,7 @@ export default function Navbar() {
 
           <div className="pt-4 border-t border-white/10">
 
+            {/* MOBILE COUNTRY SELECTOR */}
             <select
               value={country}
               onChange={(e) => handleChange(e.target.value)}
