@@ -20,6 +20,7 @@ interface Product {
 }
 
 export default function ProductPage() {
+
   const { id } = useParams()
   const { currency, rate } = useCountry()
 
@@ -27,11 +28,22 @@ export default function ProductPage() {
   const [suggestions, setSuggestions] = useState<Product[]>([])
   const [activeImg, setActiveImg] = useState(0)
 
+  const SUPABASE_BUCKET =
+    "https://fftxeeljgsumvalcimrq.supabase.co/storage/v1/object/public/products/"
+
+  const getImageUrl = (path: string) => {
+    if (!path) return ""
+    if (path.startsWith("http")) return path
+    return `${SUPABASE_BUCKET}${path}`
+  }
+
   // Fetch product
   useEffect(() => {
+
     if (!id) return
 
     const fetchProduct = async () => {
+
       const { data } = await supabase
         .from("products")
         .select("*")
@@ -39,6 +51,7 @@ export default function ProductPage() {
         .single()
 
       if (data) setProduct(data)
+
     }
 
     fetchProduct()
@@ -48,13 +61,16 @@ export default function ProductPage() {
     }
 
     increaseTraffic()
+
   }, [id])
 
   // Fetch suggestions
   useEffect(() => {
+
     if (!product) return
 
     const fetchSuggestions = async () => {
+
       const { data } = await supabase
         .from("products")
         .select("*")
@@ -63,49 +79,62 @@ export default function ProductPage() {
         .limit(4)
 
       if (data) setSuggestions(data)
+
     }
 
     fetchSuggestions()
+
   }, [product])
 
   const formatPrice = (price: number) => {
+
     const converted = price * rate
 
     return new Intl.NumberFormat(undefined, {
       style: "currency",
       currency,
     }).format(converted)
+
   }
 
   const nextImage = () => {
+
     if (!product?.images) return
+
     setActiveImg(prev =>
       prev === product.images.length - 1 ? 0 : prev + 1
     )
+
   }
 
   const prevImage = () => {
+
     if (!product?.images) return
+
     setActiveImg(prev =>
       prev === 0 ? product.images.length - 1 : prev - 1
     )
+
   }
 
   if (!product || !product.images?.length) return null
 
-  const mainImage = product.images[activeImg] || product.images[0]
+  const mainImage = getImageUrl(product.images[activeImg] || product.images[0])
 
   return (
+
     <div className="px-10 py-20 text-white">
 
       <div className="grid md:grid-cols-2 gap-16">
 
         {/* IMAGE SECTION */}
+
         <div className="relative group">
 
           <div className="relative h-[500px] w-full rounded-2xl overflow-hidden">
 
             <Image
+              unoptimized
               src={mainImage}
               alt={product.name}
               fill
@@ -129,8 +158,11 @@ export default function ProductPage() {
           </div>
 
           {/* Thumbnails */}
+
           <div className="flex gap-4 mt-4">
+
             {product.images.map((img, index) => (
+
               <div
                 key={index}
                 onClick={() => setActiveImg(index)}
@@ -140,25 +172,32 @@ export default function ProductPage() {
                     : "border-transparent"
                 }`}
               >
+
                 <Image
-                  src={img}
+                  unoptimized
+                  src={getImageUrl(img)}
                   alt=""
                   fill
                   className="object-cover"
                 />
+
               </div>
+
             ))}
+
           </div>
 
         </div>
 
         {/* DETAILS */}
+
         <div>
 
           <h1 className="text-4xl font-bold">{product.name}</h1>
           <p className="text-gray-400 mt-2">{product.brand}</p>
 
           <div className="flex items-center gap-4 mt-6">
+
             <span className="text-3xl text-yellow-500 font-bold">
               {formatPrice(product.final_price)}
             </span>
@@ -174,6 +213,7 @@ export default function ProductPage() {
                 </span>
               </>
             )}
+
           </div>
 
           <p className="mt-6 text-gray-300 leading-relaxed">
@@ -182,8 +222,13 @@ export default function ProductPage() {
 
           <button
             onClick={async () => {
-              await supabase.rpc("increment_clicks", { product_id: product.id })
+
+              await supabase.rpc("increment_clicks", {
+                product_id: product.id,
+              })
+
               window.open(product.affiliate_link, "_blank")
+
             }}
             className="inline-block mt-8 bg-yellow-500 text-black px-8 py-3 rounded-xl font-semibold hover:scale-105 transition"
           >
@@ -191,9 +236,11 @@ export default function ProductPage() {
           </button>
 
         </div>
+
       </div>
 
       {/* SUGGESTIONS */}
+
       <div className="mt-24">
 
         <h2 className="text-2xl font-bold mb-8">
@@ -203,6 +250,7 @@ export default function ProductPage() {
         <div className="grid md:grid-cols-4 gap-6">
 
           {suggestions.map((item) => (
+
             <Link
               key={item.id}
               href={`/product/${item.id}`}
@@ -210,12 +258,15 @@ export default function ProductPage() {
             >
 
               <div className="relative h-48 w-full rounded-lg overflow-hidden">
+
                 <Image
-                  src={item.images?.[0]}
+                  unoptimized
+                  src={getImageUrl(item.images?.[0])}
                   alt={item.name}
                   fill
                   className="object-cover"
                 />
+
               </div>
 
               <p className="mt-3 font-semibold">{item.name}</p>
@@ -225,6 +276,7 @@ export default function ProductPage() {
               </span>
 
             </Link>
+
           ))}
 
         </div>
@@ -232,5 +284,6 @@ export default function ProductPage() {
       </div>
 
     </div>
+
   )
 }
