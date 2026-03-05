@@ -42,10 +42,9 @@ export default function ProductGrid({ category }: { category: string }) {
   }
 
   return (
-    <div className="grid md:grid-cols-3 gap-10 mt-14">
+    <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 mt-14">
       {products.map((product) => {
 
-        // 🔥 IMPORTANT: derive values INSIDE render
         const convertedFinal = product.final_price * rate
         const convertedOriginal = product.price * rate
 
@@ -67,7 +66,8 @@ export default function ProductGrid({ category }: { category: string }) {
           >
             <div className="relative bg-white/5 backdrop-blur-xl border border-white/10 rounded-3xl p-6 hover:shadow-2xl transition-all duration-500 group-hover:-translate-y-2">
 
-              <div className="relative h-72 w-full rounded-2xl overflow-hidden">
+              {/* PRODUCT IMAGE */}
+              <div className="relative aspect-square w-full rounded-2xl overflow-hidden">
                 <Image
                   src={getImageUrl(product.image)}
                   alt={product.name}
@@ -76,6 +76,7 @@ export default function ProductGrid({ category }: { category: string }) {
                 />
               </div>
 
+              {/* PRODUCT INFO */}
               <div className="mt-6">
                 <h3 className="text-xl font-semibold text-white">
                   {product.name}
@@ -111,5 +112,3 @@ export default function ProductGrid({ category }: { category: string }) {
     </div>
   )
 }
-
-
