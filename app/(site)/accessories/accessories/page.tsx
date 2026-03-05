@@ -1,8 +1,10 @@
 "use client"
 
-import ProductGrid from "@/components/ProductGrid"
+import dynamic from "next/dynamic"
 
-export const dynamic = "force-dynamic"
+const ProductGrid = dynamic(() => import("@/components/ProductGrid"), {
+  ssr: false,
+})
 
 export default function AccessoriesPage() {
   return (
