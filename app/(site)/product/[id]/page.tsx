@@ -37,7 +37,6 @@ export default function ProductPage() {
     return `${SUPABASE_BUCKET}${path}`
   }
 
-  // Fetch product
   useEffect(() => {
 
     if (!id) return
@@ -64,7 +63,6 @@ export default function ProductPage() {
 
   }, [id])
 
-  // Fetch suggestions
   useEffect(() => {
 
     if (!product) return
@@ -123,22 +121,22 @@ export default function ProductPage() {
 
   return (
 
-    <div className="px-10 py-20 text-white">
+    <div className="px-4 md:px-10 py-16 md:py-20 text-white">
 
-      <div className="grid md:grid-cols-2 gap-16">
+      <div className="grid md:grid-cols-2 gap-10 md:gap-16">
 
         {/* IMAGE SECTION */}
 
         <div className="relative group">
 
-          <div className="relative h-[500px] w-full rounded-2xl overflow-hidden">
+          <div className="relative h-[320px] md:h-[500px] w-full rounded-2xl overflow-hidden">
 
             <Image
               unoptimized
               src={mainImage}
               alt={product.name}
               fill
-              className="object-cover transition duration-700 ease-in-out group-hover:scale-105"
+              className="object-contain md:object-cover transition duration-700 ease-in-out group-hover:scale-105"
             />
 
             <button
@@ -157,16 +155,16 @@ export default function ProductPage() {
 
           </div>
 
-          {/* Thumbnails */}
+          {/* THUMBNAILS */}
 
-          <div className="flex gap-4 mt-4">
+          <div className="flex gap-3 mt-4 overflow-x-auto pb-2">
 
             {product.images.map((img, index) => (
 
               <div
                 key={index}
                 onClick={() => setActiveImg(index)}
-                className={`relative h-20 w-20 rounded-lg overflow-hidden cursor-pointer border ${
+                className={`relative min-w-[70px] h-16 rounded-lg overflow-hidden cursor-pointer border ${
                   activeImg === index
                     ? "border-yellow-500"
                     : "border-transparent"
@@ -193,12 +191,13 @@ export default function ProductPage() {
 
         <div>
 
-          <h1 className="text-4xl font-bold">{product.name}</h1>
+          <h1 className="text-2xl md:text-4xl font-bold">{product.name}</h1>
+
           <p className="text-gray-400 mt-2">{product.brand}</p>
 
           <div className="flex items-center gap-4 mt-6">
 
-            <span className="text-3xl text-yellow-500 font-bold">
+            <span className="text-2xl md:text-3xl text-yellow-500 font-bold">
               {formatPrice(product.final_price)}
             </span>
 
@@ -216,7 +215,7 @@ export default function ProductPage() {
 
           </div>
 
-          <p className="mt-6 text-gray-300 leading-relaxed">
+          <p className="mt-6 text-gray-300 leading-relaxed text-sm md:text-base">
             {product.description}
           </p>
 
@@ -241,23 +240,23 @@ export default function ProductPage() {
 
       {/* SUGGESTIONS */}
 
-      <div className="mt-24">
+      <div className="mt-20 md:mt-24">
 
-        <h2 className="text-2xl font-bold mb-8">
+        <h2 className="text-xl md:text-2xl font-bold mb-8">
           You may also like
         </h2>
 
-        <div className="grid md:grid-cols-4 gap-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 md:gap-6">
 
           {suggestions.map((item) => (
 
             <Link
               key={item.id}
               href={`/product/${item.id}`}
-              className="bg-white/5 p-4 rounded-xl hover:scale-105 transition"
+              className="bg-white/5 p-3 md:p-4 rounded-xl hover:scale-105 transition"
             >
 
-              <div className="relative h-48 w-full rounded-lg overflow-hidden">
+              <div className="relative h-32 md:h-48 w-full rounded-lg overflow-hidden">
 
                 <Image
                   unoptimized
@@ -269,9 +268,11 @@ export default function ProductPage() {
 
               </div>
 
-              <p className="mt-3 font-semibold">{item.name}</p>
+              <p className="mt-3 text-sm md:text-base font-semibold">
+                {item.name}
+              </p>
 
-              <span className="text-yellow-500 font-bold">
+              <span className="text-yellow-500 font-bold text-sm md:text-base">
                 {formatPrice(item.final_price)}
               </span>
 
@@ -284,6 +285,5 @@ export default function ProductPage() {
       </div>
 
     </div>
-
   )
 }
