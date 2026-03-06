@@ -39,15 +39,16 @@ export default function Navbar() {
   return (
     <div className="fixed top-0 w-full bg-black/60 backdrop-blur-lg z-50">
 
+      {/* NAVBAR */}
       <div className="flex justify-between items-center px-4 md:px-10 py-4 text-white">
 
         {/* LEFT SIDE */}
         <div className="flex items-center gap-4">
 
-          {/* HAMBURGER (mobile only) */}
+          {/* HAMBURGER */}
           <button
             onClick={() => setOpen(true)}
-            className="md:hidden flex flex-col gap-1"
+            className="md:hidden flex flex-col gap-[5px]"
           >
             <span className="w-6 h-[2px] bg-white"></span>
             <span className="w-6 h-[2px] bg-white"></span>
@@ -65,7 +66,7 @@ export default function Navbar() {
         </div>
 
         {/* DESKTOP MENU */}
-        <div className="hidden md:flex gap-8 items-center">
+        <div className="hidden md:flex gap-8 items-center text-sm tracking-wide">
           {links.map((link) => (
             <Link
               key={link.name}
@@ -77,11 +78,11 @@ export default function Navbar() {
           ))}
         </div>
 
-        {/* COUNTRY SELECTOR (DESKTOP ONLY) */}
+        {/* COUNTRY SELECTOR (VISIBLE MOBILE + DESKTOP) */}
         <select
           value={country}
           onChange={(e) => handleChange(e.target.value)}
-          className="hidden md:block bg-black border border-yellow-500 px-3 py-1 rounded text-sm"
+          className="bg-black/70 border border-yellow-500 px-2 py-1 rounded text-xs md:text-sm"
         >
           {countries.map((c) => (
             <option key={c} value={c}>
@@ -92,14 +93,18 @@ export default function Navbar() {
 
       </div>
 
-      {/* MOBILE MENU */}
+      {/* MOBILE MENU DRAWER */}
       <div
-        className={`fixed top-0 right-0 h-full w-72 bg-black/70 backdrop-blur-xl border-l border-white/10 transform transition-transform duration-300 ${
-          open ? "translate-x-0" : "translate-x-full"
-        }`}
+        className={`fixed top-0 right-0 h-full w-72
+        bg-gradient-to-b from-black/80 via-black/60 to-black/80
+        backdrop-blur-2xl
+        border-l border-white/10
+        shadow-2xl
+        transform transition-transform duration-300
+        ${open ? "translate-x-0" : "translate-x-full"}`}
       >
 
-        {/* CLOSE BUTTON */}
+        {/* CLOSE */}
         <div className="flex justify-end p-5">
           <button
             onClick={() => setOpen(false)}
@@ -109,7 +114,7 @@ export default function Navbar() {
           </button>
         </div>
 
-        {/* MENU ITEMS */}
+        {/* LINKS */}
         <div className="flex flex-col gap-6 px-6 text-lg">
 
           {links.map((link) => (
@@ -123,13 +128,17 @@ export default function Navbar() {
             </Link>
           ))}
 
-          <div className="pt-4 border-t border-white/10">
+          {/* COUNTRY SELECTOR */}
+          <div className="pt-6 border-t border-white/10">
 
-            {/* MOBILE COUNTRY SELECTOR */}
+            <p className="text-sm mb-2 text-gray-400">
+              Select Country
+            </p>
+
             <select
               value={country}
               onChange={(e) => handleChange(e.target.value)}
-              className="bg-black border border-yellow-500 px-3 py-2 rounded w-full"
+              className="bg-black/60 border border-yellow-500 px-3 py-2 rounded w-full"
             >
               {countries.map((c) => (
                 <option key={c} value={c}>
@@ -144,15 +153,14 @@ export default function Navbar() {
 
       </div>
 
-      {/* BACKDROP */}
+      {/* BACKDROP BLUR */}
       {open && (
         <div
           onClick={() => setOpen(false)}
-          className="fixed inset-0 bg-black/40 backdrop-blur-sm md:hidden"
-        ></div>
+          className="fixed inset-0 bg-black/40 backdrop-blur-sm"
+        />
       )}
 
     </div>
   )
 }
-
