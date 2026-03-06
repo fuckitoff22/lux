@@ -16,9 +16,9 @@ export default function Navbar() {
     { name: "Watches", href: "/watches" },
     { name: "Clothes", href: "/clothes" },
     { name: "Perfume", href: "/perfume" },
-    { name: "Electronics", href: "/accessories/electronics" },
-    { name: "Furniture", href: "/accessories/furniture" },
-    { name: "Accessories", href: "/accessories/accessories" },
+    { name: "Electronics", href: "/electronics" },
+    { name: "Furniture", href: "/furniture" },
+    { name: "Accessories", href: "/accessories" },
   ]
 
   const countries = [
@@ -155,3 +155,4 @@ export default function Navbar() {
     </div>
   )
 }
+
